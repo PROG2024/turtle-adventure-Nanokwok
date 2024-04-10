@@ -285,10 +285,10 @@ class FencingEnemy(Enemy):
         self.__home_x = game.home.x
         self.__home_y = game.home.y
         self.__step = 0
-        self.__home_corner = [(self.__home_x - 50, self.__home_y - 50), (self.__home_x + 50, self.__home_y - 50),
-                              (self.__home_x + 50, self.__home_y + 50), (self.__home_x - 50, self.__home_y + 50)]
         self.__side_length = 100
-        self.__directions = [(1, 0), (0, 1), (-1, 0), (0, -1)]
+        cn = 100 / 2
+        self.__home_corner = [(self.__home_x - cn, self.__home_y - cn), (self.__home_x + cn, self.__home_y - cn),
+                              (self.__home_x + cn, self.__home_y + cn), (self.__home_x - cn, self.__home_y + cn)]
 
     def create(self) -> None:
         self.__id = self.canvas.create_oval(0, 0, 0, 0, outline=self.color, width=2)
@@ -372,6 +372,45 @@ class RandomEnemy(Enemy):
                            self.y + self.size / 2)
 
 
+class FrontGateEnermy(Enemy):
+    def __init__(self, game: "TurtleAdventureGame", size: int, color: str):
+        super().__init__(game, size, color)
+        self.__id = 0
+        self.__angle = 45
+
+    def create(self) -> None:
+        self.__id = self.canvas.create_oval(0, 0, 0, 0, outline=self.color, width=2)
+
+    def delete(self) -> None:
+        self.canvas.delete(self.__id)
+
+    def update(self) -> None:
+        if self.game.player is not None:
+            if self.hits_player():
+                self.game.game_over_lose()
+                return
+
+            speed = 3
+
+            self.x += speed * math.cos(self.__angle)
+            self.y += speed * math.sin(self.__angle)
+
+            screen_width = self.game.screen_width
+            screen_height = self.game.screen_height
+
+            if self.x < screen_width - (screen_width // 4) or self.x > screen_width:
+                self.__angle = math.pi - self.__angle
+            if self.y < screen_height // 3 or self.y > screen_height - (screen_height // 3):
+                self.__angle = -self.__angle
+
+    def render(self) -> None:
+        self.canvas.coords(self.__id,
+                           self.x - self.size / 2,
+                           self.y - self.size / 2,
+                           self.x + self.size / 2,
+                           self.y + self.size / 2)
+
+
 class EnemyGenerator:
     """
     An EnemyGenerator instance is responsible for creating enemies of various
@@ -386,6 +425,7 @@ class EnemyGenerator:
 
         # example
         self.__game.after(100, self.create_enemy)
+
 
     @property
     def game(self) -> "TurtleAdventureGame":
@@ -409,6 +449,7 @@ class EnemyGenerator:
         random_enemy = RandomEnemy(self.__game, 20, "red")
         chasing_enemy = ChasingEnemy(self.__game, 20, "blue")
         fencing_enemy = FencingEnemy(self.__game, 20, "orange")
+        front_gate_enemy = FrontGateEnermy(self.__game, 20, "pink")
 
         random_enemy.x = 100
         random_enemy.y = 100
@@ -419,9 +460,13 @@ class EnemyGenerator:
         fencing_enemy.x = self.__screen_width - 150
         fencing_enemy.y = (self.__screen_height // 2) - 50
 
+        front_gate_enemy.x = self.__screen_width - 100
+        front_gate_enemy.y = self.__screen_height // 2
+
         self.game.add_element(random_enemy)
         self.game.add_element(chasing_enemy)
         self.game.add_element(fencing_enemy)
+        self.game.add_element(front_gate_enemy)
 
 
 class TurtleAdventureGame(Game):
@@ -491,3 +536,11 @@ class TurtleAdventureGame(Game):
                                 text="You Lose",
                                 font=font,
                                 fill="red")
+
+    def show_level(self, level: int):
+        font = ("Arial", 20, "bold")
+        self.canvas.create_text(self.screen_width / 2,
+                                20,
+                                text=f"Level {level}",
+                                font=font,
+                                fill="grey")
