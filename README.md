@@ -1,3 +1,4 @@
+[![Review Assignment Due Date](https://classroom.github.com/assets/deadline-readme-button-24ddc0f5d75046c5622901739e7c5dd533143b0c8e959d652212380cedb1ea36.svg)](https://classroom.github.com/a/C7GxOCpL)
 # Turtle's Adventure
 
 In this assignment, you are to implement a simple graphical adventure game
@@ -48,8 +49,7 @@ You are required to implement at least *four* types of enemies as follows:
 * `ChasingEnemy` - will try chasing the player.  Try not to move
   this enemy too fast, otherwise the player will have no chance to win.
 * `FencingEnemy` - will walk around the home in a square-like pattern.
-* `???Enemy` - this last kind of enemy is to be designed and named on your
-  own.
+* `FrontGateEnemy` - this last kind of enemy that randomly walk around the home.
 
 
 ## Submission
