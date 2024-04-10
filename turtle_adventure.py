@@ -284,8 +284,9 @@ class FencingEnemy(Enemy):
         self.__step = 0
         self.__home_x = game.home.x
         self.__home_y = game.home.y
-        self.__side_length = 100  # Length of each side of the square
-        self.__movement_directions = [(1, 0), (0, 1), (-1, 0), (0, -1)]  # Right, Down, Left, Up
+        self.__step = 0
+        self.__side_length = 100
+        self.__directions = [(1, 0), (0, 1), (-1, 0), (0, -1)]
 
     def create(self) -> None:
         self.__id = self.canvas.create_oval(0, 0, 0, 0, outline="red", width=2)
@@ -295,25 +296,32 @@ class FencingEnemy(Enemy):
 
     def update(self) -> None:
         if self.game.player is not None:
-            player_x = self.game.player.x
-            player_y = self.game.player.y
-
             if self.hits_player():
                 self.game.game_over_lose()
                 return
 
             speed = 2
 
-            target_x = self.__home_x + self.__movement_directions[self.__step][0] * self.__side_length
-            target_y = self.__home_y + self.__movement_directions[self.__step][1] * self.__side_length
-
-            angle = math.atan2(target_y - self.y, target_x - self.x)
-            self.x += speed * math.cos(angle)
-            self.y += speed * math.sin(angle)
-
-            if abs(self.x - target_x) < speed and abs(self.y - target_y) < speed:
-                # Increment step to move to the next side of the square
-                self.__step = (self.__step + 1) % 4
+            if self.__step == 0:
+                self.x += speed * self.__directions[self.__step][0]
+                self.y += speed * self.__directions[self.__step][1]
+                if self.x >= self.__home_x + self.__side_length:
+                    self.__step += 1
+            elif self.__step == 1:
+                self.x += speed * self.__directions[self.__step][0]
+                self.y += speed * self.__directions[self.__step][1]
+                if self.y >= self.__home_y + self.__side_length:
+                    self.__step += 1
+            elif self.__step == 2:
+                self.x += speed * self.__directions[self.__step][0]
+                self.y += speed * self.__directions[self.__step][1]
+                if self.x <= self.__home_x:
+                    self.__step += 1
+            elif self.__step == 3:
+                self.x += speed * self.__directions[self.__step][0]
+                self.y += speed * self.__directions[self.__step][1]
+                if self.y <= self.__home_y:
+                    self.__step = 0
 
     def render(self) -> None:
         self.canvas.coords(self.__id,
@@ -410,8 +418,8 @@ class EnemyGenerator:
         chasing_enemy.x = 200
         chasing_enemy.y = 200
 
-        fencing_enemy.x = 300
-        fencing_enemy.y = 300
+        fencing_enemy.x = self.__screen_width - 100
+        fencing_enemy.y = self.__screen_height // 2
 
         self.game.add_element(random_enemy)
         self.game.add_element(chasing_enemy)
