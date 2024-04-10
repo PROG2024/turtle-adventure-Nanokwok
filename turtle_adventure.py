@@ -285,6 +285,8 @@ class FencingEnemy(Enemy):
         self.__home_x = game.home.x
         self.__home_y = game.home.y
         self.__step = 0
+        self.__home_corner = [(self.__home_x - 50, self.__home_y - 50), (self.__home_x + 50, self.__home_y - 50),
+                              (self.__home_x + 50, self.__home_y + 50), (self.__home_x - 50, self.__home_y + 50)]
         self.__side_length = 100
         self.__directions = [(1, 0), (0, 1), (-1, 0), (0, -1)]
 
@@ -303,24 +305,20 @@ class FencingEnemy(Enemy):
             speed = 2
 
             if self.__step == 0:
-                self.x += speed * self.__directions[self.__step][0]
-                self.y += speed * self.__directions[self.__step][1]
-                if self.x >= self.__home_x + self.__side_length:
+                self.x += speed
+                if self.x >= self.__home_corner[1][0]:
                     self.__step += 1
             elif self.__step == 1:
-                self.x += speed * self.__directions[self.__step][0]
-                self.y += speed * self.__directions[self.__step][1]
-                if self.y >= self.__home_y + self.__side_length:
+                self.y += speed
+                if self.y >= self.__home_corner[2][1]:
                     self.__step += 1
             elif self.__step == 2:
-                self.x += speed * self.__directions[self.__step][0]
-                self.y += speed * self.__directions[self.__step][1]
-                if self.x <= self.__home_x:
+                self.x -= speed
+                if self.x <= self.__home_corner[3][0]:
                     self.__step += 1
             elif self.__step == 3:
-                self.x += speed * self.__directions[self.__step][0]
-                self.y += speed * self.__directions[self.__step][1]
-                if self.y <= self.__home_y:
+                self.y -= speed
+                if self.y <= self.__home_corner[0][1]:
                     self.__step = 0
 
     def render(self) -> None:
@@ -418,8 +416,8 @@ class EnemyGenerator:
         chasing_enemy.x = 200
         chasing_enemy.y = 200
 
-        fencing_enemy.x = self.__screen_width - 100
-        fencing_enemy.y = self.__screen_height // 2
+        fencing_enemy.x = self.__screen_width - 150
+        fencing_enemy.y = (self.__screen_height // 2) - 50
 
         self.game.add_element(random_enemy)
         self.game.add_element(chasing_enemy)
