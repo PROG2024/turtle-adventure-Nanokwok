@@ -426,7 +426,6 @@ class EnemyGenerator:
         # example
         self.__game.after(100, self.create_enemy)
 
-
     @property
     def game(self) -> "TurtleAdventureGame":
         """

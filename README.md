@@ -49,8 +49,7 @@ You are required to implement at least *four* types of enemies as follows:
 * `ChasingEnemy` - will try chasing the player.  Try not to move
   this enemy too fast, otherwise the player will have no chance to win.
 * `FencingEnemy` - will walk around the home in a square-like pattern.
-* `???Enemy` - this last kind of enemy is to be designed and named on your
-  own.
+* `FrontGateEnemy` - this last kind of enemy that randomly walk around the home.
 
 
 ## Submission
