@@ -1,6 +1,6 @@
+import math
 from turtle import RawTurtle
 from gamelib import Game, GameElement
-import math
 
 
 class TurtleGameElement(GameElement):
@@ -373,6 +373,7 @@ class RandomEnemy(Enemy):
 
 
 class FrontGateEnermy(Enemy):
+    """enemy that walk randomly around the home"""
     def __init__(self, game: "TurtleAdventureGame", size: int, color: str):
         super().__init__(game, size, color)
         self.__id = 0
@@ -537,6 +538,7 @@ class TurtleAdventureGame(Game):
                                 fill="red")
 
     def show_level(self, level: int):
+        """show level"""
         font = ("Arial", 20, "bold")
         self.canvas.create_text(self.screen_width / 2,
                                 20,
