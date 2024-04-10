@@ -291,7 +291,7 @@ class FencingEnemy(Enemy):
         self.__directions = [(1, 0), (0, 1), (-1, 0), (0, -1)]
 
     def create(self) -> None:
-        self.__id = self.canvas.create_oval(0, 0, 0, 0, outline="red", width=2)
+        self.__id = self.canvas.create_oval(0, 0, 0, 0, outline=self.color, width=2)
 
     def delete(self) -> None:
         self.canvas.delete(self.__id)
